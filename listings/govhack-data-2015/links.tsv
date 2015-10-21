@@ -1,0 +1,47 @@
+title	url	description	category
+Data.govt.nz	http://data.govt.nz	contains over 3,400 datasets from various Government departments, including LINZ, National Library, ACC, Police, various District Councils.  There were 247 datasets marked as either updated or newly added  between 1st June 2015 & 14th June 2015.	NZ Data – Government
+Statistics New Zealand	http://nzdotstat.stats.govt.nz/wbos/Index.aspx		NZ Data – Government
+Wanganui District Council – full datasets	http://wdc.wanganui.govt.nz/odata/xml/index.html		NZ Data – Government
+Wanganui District Council GIS data	http://maps.wanganui.govt.nz/geoserver/web/;jsessionid=h7wgq0v25vjm?wicket:bookmarkablePage=:org.geoserver.web.demo.MapPreviewPage		NZ Data – Government
+Wanganui District Council – Cemetery search	http://www.wanganui.govt.nz/our-services/cemeteries-and-crematorium/Pages/Cemetery-Search.aspx		NZ Data – Government
+Wanganui District Council – Property/Rating search	http://www.wanganui.govt.nz/our-services/property-and-rates/rating-and-valuations/Pages/default.aspx		NZ Data – Government
+Wanganui District Council – Food Grading search	http://www.wanganui.govt.nz/our-services/do-it-online/food-grading-search/Pages/default.aspx		NZ Data – Government
+Education Counts Data Collections	https://www.educationcounts.govt.nz/data-services/data-collections	Ministry of Education (MOE)	NZ Data – Government
+Education Counts – Statistics	http://www.educationcounts.govt.nz/statistics		NZ Data – Government
+Inland Revenue (IRD) Tax Statistics	http://www.ird.govt.nz/aboutir/external-stats/tax-statistics-sitemap.html		NZ Data – Government
+Land Information New Zealand (LINZ)	https://data.linz.govt.nz/		NZ Data – Government
+Statistics NZ – DataHub table viewer	http://nzdotstat.stats.govt.nz/wbos/Index.aspx		NZ Data – Government
+Statistic NZ – Browse for statistics	http://statistics.govt.nz/browse_for_stats.aspx		NZ Data – Government
+Ministry of Social Development (MSD) Statistics Page	https://www.msd.govt.nz/about-msd-and-our-work/publications-resources/statistics/index.html		NZ Data – Government
+Ministry of Social Development (MSD) Benefits data tables	https://www.msd.govt.nz/about-msd-and-our-work/publications-resources/statistics/benefit/index.html#Datatables6		NZ Data – Government
+Ministry of Social Development (MSD) Social housing register	http://www.housing.msd.govt.nz/information-for-housing-providers/register/index.html		NZ Data – Government
+New Zealand Police Crime statistics	http://www.police.govt.nz/about-us/publications/statistics		NZ Data – Government
+Ministry of Justice (MoJ) Conviction data	http://datalab.justice.govt.nz/data#1		NZ Data – Government
+Ministry of Health (MoH) Health statistics and data sets	http://www.health.govt.nz/nz-health-statistics/health-statistics-and-data-sets		NZ Data – Government
+Wellington City Council (WCC) GIS data	http://data.wcc.opendata.arcgis.com/		NZ Data – Government
+Land Air Water Aotearoa (LAWA) Natural resources data	http://www.lawa.org.nz/		NZ Data – Government
+New Zealand Qualifications Authority (NZQA) Secondary School Stats	http://www.nzqa.govt.nz/studying-in-new-zealand/secondary-school-and-ncea/find-information-about-a-school/secondary-school-statistics/consolidated-files/		NZ Data – Government
+Ministry of Transport, transport data	http://www.transport.govt.nz/ourwork/tmif/		NZ Data – Government
+Department of Conservation (DoC) facilities	http://geoportal.doc.govt.nz/geoportal/catalog/search/browse/browse.page		NZ Data – Government
+Government A-Z directory and Consultation Listing	https://www.govt.nz/about/api	Department of Internal Affairs (DIA)	NZ Data – Government
+New Zealand Gazette	http://www.digitalnz.org/developers/govhack-infopack#gazette	Department of Internal Affairs (DIA)  (via DigitalNZ API)	NZ Data – Government
+DigitalNZ API	http://www.digitalnz.org/developers/govhack-infopack	Department of Internal Affairs (DIA) – National Library of New Zealand	NZ Data – Government
+Papers Past	http://natlib.govt.nz/about-us/open-data/papers-past-metadata	Department of Internal Affairs (DIA) – National Library of New Zealand  (via DigitalNZ API)	NZ Data – Government
+Turnbull unpublished collections	http://natlib.govt.nz/about-us/open-data/turnbull-unpublished-collections-metadata	Department of Internal Affairs (DIA) – National Library of New Zealand  (via DigitalNZ API)	NZ Data – Government
+WWI related data	http://www.digitalnz.org/developers/wwi-api-examples	Department of Internal Affairs (DIA) – National Library of New Zealand  (via DigitalNZ API)	NZ Data – Government
+Publications New Zealand	http://natlib.govt.nz/about-us/open-data/publications-nz-metadata	Department of Internal Affairs (DIA) – National Library of New Zealand	NZ Data – Government
+Index New Zealand	http://natlib.govt.nz/about-us/open-data/innz-metadata	Department of Internal Affairs (DIA) – National Library of New Zealand	NZ Data – Government
+Free downloads	http://natlib.govt.nz/photos?il%5batl_free_download%5d=true	Department of Internal Affairs (DIA) – National Library of New Zealand	NZ Data – Government
+https://data.govt.nz/dataset/show/3630	https://data.govt.nz/dataset/show/3630	New Zealand Walking Access Commission – Public Access Areas –	NZ Data – Government
+http://wams.org.nz/arcgis/rest/services/WEBSERVICE/WEBSERVICE_Public_Access_Areas/MapServer	http://wams.org.nz/arcgis/rest/services/WEBSERVICE/WEBSERVICE_Public_Access_Areas/MapServer	New Zealand Walking Access Commission – REST END POINT –	NZ Data – Government
+http://walkingaccess.govt.nz/walking-access-mapping/gis-data/	http://walkingaccess.govt.nz/walking-access-mapping/gis-data/	New Zealand Walking Access Commission – Generic Information –	NZ Data – Government
+https://anypoint.mulesoft.com/apiplatform/samuellui/#/portals/organizations/7372ce93-ae11-48d5-bcaf-a98a07f1bb5e/apis/25664/versions/27252	https://anypoint.mulesoft.com/apiplatform/samuellui/#/portals/organizations/7372ce93-ae11-48d5-bcaf-a98a07f1bb5e/apis/25664/versions/27252	Api that has been created to expose the census data –	NZ Data – Government
+https://www.govt.nz/browse/engaging-with-government/the-nz-flag-your-chance-to-decide/gallery/	https://www.govt.nz/browse/engaging-with-government/the-nz-flag-your-chance-to-decide/gallery/	NZ Flags Data –  (data is open, but you’ll need to scrape it)	NZ Data – Government
+Open New Zealand	https://wiki.open.org.nz/wiki/display/main/New+Zealand+APIs	New Zealand API	NZ Data – Other
+Better APIs for Business	https://betterapis.business.govt.nz/existing-government-apis		NZ Data – Other
+Mazpen Pelias Geocoder	https://www.educationcounts.govt.nz/data-services/data-collections		NZ Data – Other
+Wiki New Zealand	http://wikinewzealand.org/		NZ Data – Other
+Open Data Catalogue	http://cat.open.org.nz/	The Open Data Catalogue is an attempt to classify where information resides, who ‘owns’ it, what license it is distributed under and if it is free or not.	NZ Data – Other
+SDKS.IO – APIMATIC	https://sdks.io/	An NZ based company focused on engaging developers with APIs. Over 10,000 public APIs in the database: . Developers at GovHack can make use of these to rapidly develop apps.APIMATIC have extended an offer to API providers participating in GovHack. If any API providers want to expose SDKs/Client libraries of their APIs to the developers in GovHack, APIMATIC is willing to provide those SDKs for FREE.  APIMATIC currently have over 10,000 public APIs in their database: . Individual developers at GovHack can also make use of the APIMATIC tool, for free, to rapidly develop apps.	NZ Data – Other
+http://www.govhack.org/2015-data/	http://www.govhack.org/2015-data/		Other
+http://linkedin.com/pulse/playing-smarter-jo-booth	http://linkedin.com/pulse/playing-smarter-jo-booth	Intergraph Mobile Alert feed – info on:	Other

@@ -1,0 +1,22 @@
+title	url	description	format
+GeoNet Earthquake data	http://www.geonet.org.nz/resources/earthquake/quake-web-services.html		
+TradeMe	http://developer.trademe.co.nz/		
+NZ event info	http://www.eventfinder.co.nz/api/index		
+Metadata &amp; thumbnails of NZ content objects	http://www.digitalnz.org/developer		
+NZ highway info	https://infoconnect.highwayinfo.govt.nz/opencms/opencms/infoconnect		
+geospatial data	http://koordinates.com		[api](http://api.koordinates.com)
+Send and receive SMS via NZ API gateway	http://www.message-media.co.nz/sms-gateway.html		
+Reusable tourism web content	http://www.newzealand.com/travel/utilities/help/web-services.cfm		
+Wellington news	http://wellington.gen.nz/api		
+Integrate with Xero services	https://network.xero.com/Login.xro/Login		
+NZ vehicle information	http://www.carjam.co.nz/cms/2008/12/24/carjam-api/		
+Track NZ post deliveries	http://www.nzpost.co.nz/Cultures/en-NZ/ProductsAndServices/D/DeveloperCentre/TrackingAPI/TrackingAPIOverview.htm		
+NZ weather (international site)	http://wiki.wunderground.com/index.php/API_-_XML		
+NZ climate data (not really API but can use curl)	http://cliflo.niwa.co.nz/		
+Zenubu listings about NZ places	http://www.zenbu.co.nz/about/xml		
+Availability of .nz domains	http://www.simplename.co.nz/page/api	You can use the official 'whois' service by (1) open a TCP connection to whois.srs.net.nz on port 43 (2) send the domain name followed by a newline character.  The service will respond with information about the domain name, or that it is not registered.<br>You can also use a (wide) variety of online services such as the one described here:	
+Latest 50 Trademe auctions	http://archive.votemenot.co.nz/thread/25651432/trademe-api/		[api](http://rowansimpson.com/2007/05/15/a-conversation-about-an-api/)
+Personal bankruptcies and companies in liquidation	http://www.insolvency.govt.nz/cms/customer-support/news-and-public-notices/important-announcements/web-service-now-available-for-insolvency-and-trustee-service/view		
+Companies office listings	http://www.business.govt.nz/companies/help-support/technical-support/connect-direct/web-services		
+RSS feed of re-published historical NZ books	http://www.nzetc.org/tm/scholarly/facets/rss?fq=record_type:facet&fq=record_type:facet&fq=type:Work&facet=true&style=rss&rows=5000		
+Powershop (monitor usage, enter meter readings and top up your account)	http://powershop.co.nz/developers.html		
