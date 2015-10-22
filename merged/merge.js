@@ -7,95 +7,206 @@ var fs            = require('fs');
 var vinyl         = require('vinyl-fs');
 var through       = require('through');
 var eventStream   = require('event-stream');
+var sha1          = require('sha1');
+
+class LineToObjectConverter {
+	constructor() {
+		this.state = { headers: [], separator: '\t' };
+	}
+	separator(_) {
+		if(!arguments.length) { return this.state.separator; }
+		this.state.separator = _;
+		return this;
+	}
+	headerLine(line) {
+		let {separator} = this.state;
+		if(!arguments.length) { return this.state.headers; }
+		this.state.headers = line.split(separator);
+		return this;
+	}
+	asObject(line) {
+		let {separator, headers} = this.state;
+		let cols = line.split(separator);
+		var obj = cols.reduce((acc, d, i) => {
+			if(d && d.length) { acc[headers[i]] = d; }
+			return acc;
+		}, {});
+		return obj;
+	}
+}
+
+function overwriteFile(filename) {
+	if (fs.existsSync(filename)) { fs.unlinkSync(filename); }
+	return filename;
+}
 
 
-let mergeStream = through();
+function turnFileLinesIntoObjectStream() {
+	return through(
+		function(file, cb) {
+			let list = through();
+			let converter;
+			this.queue({path: file.path, list});
+			file.contents
+				.pipe(eventStream.split())
+				.pipe(through(
+					function(line) {
+						if(converter === undefined) {
+							// first line has headers
+							converter = new LineToObjectConverter()
+										.separator('\t')
+										.headerLine(line);
+						} else {
+							// data lines
+							var obj = converter.asObject(line);
+							if(obj) { list.queue(obj); }
+						}
+					},
+					function() {
+						list.queue(null);
+					}
+				));
+		}, function() {
+			this.queue(null);
+		}
+	)
+}
 
 
-let inStream = vinyl.src('../listings/*/links.tsv', { buffer: false })
-							.pipe((function() {
-								let pending = 0;
-								return through(
-									function(file, cb) {
-										let headers, source = file.path.split('/').splice(-2, 1).join('/');
-										pending++;
-										file.contents
-											.pipe(eventStream.split())
-											.pipe(through(
-												function(line) {
-													let strm = this;
-													let cols = line.split('\t');
-													if(headers === undefined) {
-														headers = cols;
-													} else {
-														var obj = cols.reduce((acc, d, i) => {
-															if(d && d.length) {
-																acc[headers[i]] = d;
-															}
-															return acc;
-														}, {});
-														obj.source = source;
-														mergeStream.queue(obj);
-													}
-												},
-												function() {
-													pending--
-													if(pending === 0) {
-														mergeStream.queue(null);
-													}
-												}
-											));
-										},
-										function() { }
-							)
+function addSourceToEachObjectInStream(getSourceFromPath) {
+	return through(
+		function({path, list}) {
+				let newList = list.pipe(eventStream.map(function(obj, cb) {
+					obj.source = getSourceFromPath(path);
+					cb(null, obj);
+				}));
+				this.queue(newList);
+		},
+		function() {
+			this.queue(null);
+		}
+	)
+}
 
-							}()))
+function mergeObjectStreams() {
+	let pending = 0;
+	let mergeStream = through();
+	return through(
+		function(strm) {
+			pending++;
+			strm.pipe(through(
+				function(d) {
+					mergeStream.queue(d);
+				},
+				function() {
+					pending--;
+					if(pending === 0) {
+						mergeStream.queue(null);
+					}
+				}
+			));
+		},
+		function() {
+			var strm = this;
+			mergeStream.pipe(through(
+				function(d) {
+					strm.queue(d);
+				},
+				function() {
+					strm.queue(null);
+				}
+			))
+		}
+	);
+};
 
 
-var dict = [];
-var list = [];
-mergeStream.pipe(through(
-	function(d) {
-		let {url} = d;
-		let idx = dict.indexOf(d.url);
+class UrlGrouper {
+	constructor() {
+		this.state = {dict: [], list: []};
+	}
+
+	static getSourceIndex(sources, source) {
+		let srcIdx = sources.indexOf(source);
+		if(srcIdx === -1) { srcIdx = sources.length; sources.push(source); }
+		return srcIdx;
+	}
+
+	static getUrlProtocol(url) {
+		let protocol = url.match(/^(?:(ht|f)tp(s?)\:\/\/)?/);
+		if(protocol) {
+			protocol = protocol[0];
+			url = url.replace(protocol, '');
+		} else {
+			protocol = 'http://';
+		}
+		return {url, protocol};
+	}
+
+	getUrlEntry(item) {
+		let {url} = item;
+		if(!url) {
+			console.log(`[WARN] Item has no url ${JSON.stringify(item)}`);
+			return;
+		}
+		let urlAndProtocol = UrlGrouper.getUrlProtocol(url);
+		url = urlAndProtocol.url;
+		let {dict, list} = this.state;
+		let idx = dict.indexOf(url);
 		if(idx === -1) {
 			idx = dict.length; dict.push(url);
-			list[idx] = {url: url, listed: []}
+			list[idx] = {url: url, protocol: urlAndProtocol.protocol, sources: []};
 		}
-		delete d["url"];
-		if(d.description) {
-				d.description = d.description.replace(/\"/g, "''");
-		}
-		list[idx].listed.push(d);
-		this.queue(d);
-	},
-	function() {
-
-
-		var sha1 = require('sha1');
-
-		const filename = __dirname + '/merged-default/merged.nedb.json';
-		if (fs.existsSync(filename)) { fs.unlinkSync(filename); }
-		const filename_geo = __dirname + '/merged-geo/merged.nedb.json';
-		if (fs.existsSync(filename_geo)) { fs.unlinkSync(filename_geo); }
-
-		var Datastore = require('nedb'),
-		    db_default  = new Datastore({ filename: filename, autoload: true }),
-				db_geo      = new Datastore({ filename: filename_geo, autoload: true });;
-
-		list.sort((a,b) => {
-			let urla = (a.url || '').replace(/https?:\/\//, '');
-			let urlb = (b.url || '').replace(/https?:\/\//, '');
-			return urla < urlb ? -1 : urla > urlb ? 1 : 0
-		});
-		list.forEach((d, i) => {
-			let sha = sha1(d.url || '');
-			let db = (fs.existsSync(__dirname + '/merged-geo/snapshots/raw_' + sha + '.png')) ? db_geo : db_default;
-			d.sha1 = sha;
-			db.insert(d);
-		});
-		this.queue(null);
-		console.log(`[saved] ${filename}`)
-		console.log(`[saved] ${filename_geo}`)
+		return list[idx];
 	}
-))
+
+	queue(item) {
+		let entry  = this.getUrlEntry(item);
+		if(!entry) { return; }
+		let props = {};
+		let srcIdx = UrlGrouper.getSourceIndex(entry.sources, item.source);
+		Object.keys(item).forEach((key) => {
+			if('url,source'.split(',').indexOf(key) !== -1) { return; }
+			let raw = (item[key] || '').replace(/\"/g, "''");
+			if(!props.hasOwnProperty(key)) { props[key] = []; };
+			props[key][srcIdx] = raw;
+		});
+		entry.props = props;
+	}
+
+	listUrls()    { return this.state.list; }
+}
+
+
+function exportItems() {
+	let grouped = new UrlGrouper();
+	var geoUrls = require('./geo-urls.js');
+
+	return through(
+		function(item) { grouped.queue(item); },
+		function() {
+			var Datastore = require('nedb'),
+				db_default  = new Datastore({ filename: overwriteFile(__dirname + '/merged-default/merged.nedb.json'), autoload: true }),
+				db_geo      = new Datastore({ filename: overwriteFile(__dirname + '/merged-geo/merged.nedb.json'), autoload: true });;
+
+			let urls    = grouped.listUrls();
+			urls.sort((a,b) => { return a.url < b.url ? -1 : a.url > b.url ? 1 : 0 });
+			urls.forEach(({url, protocol, sources, props}, i) => {
+				let fullUrl = protocol+url;
+				let db = (geoUrls.indexOf(fullUrl) !== -1) ? db_geo : db_default;
+				db.insert({url: fullUrl, sha1: sha1(fullUrl), sources, props});
+			});
+
+			console.log(`[saved] ${db_default.filename}`)
+			console.log(`[saved] ${db_geo.filename}`)
+		}
+	);
+}
+
+let inStream = vinyl.src('../listings/*/links.tsv', { buffer: false })
+										.pipe(turnFileLinesIntoObjectStream())
+										.pipe(addSourceToEachObjectInStream(
+											function getSource(path) { return path.split('/').splice(-2, 1).join('/'); })
+										)
+										.pipe(mergeObjectStreams())
+										.pipe(exportItems());
