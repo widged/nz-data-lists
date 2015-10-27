@@ -2,12 +2,15 @@
 
 /* jshint esnext: true */
 
-
 var fs            = require('fs');
 var vinyl         = require('vinyl-fs');
 var through       = require('through');
 var eventStream   = require('event-stream');
 var sha1          = require('sha1');
+var chalk         = require('chalk');
+
+var warn = chalk.white.bgRed.bold;
+var info = chalk.blue;
 
 class LineToObjectConverter {
 	constructor() {
@@ -42,6 +45,7 @@ function overwriteFile(filename) {
 
 
 function turnFileLinesIntoObjectStream() {
+	var count = 0;
 	return through(
 		function(file, cb) {
 			let list = through();
@@ -59,11 +63,16 @@ function turnFileLinesIntoObjectStream() {
 						} else {
 							// data lines
 							var obj = converter.asObject(line);
-							if(obj) { list.queue(obj); }
+							if(obj) {
+								list.queue(obj);
+							} else {
+								console.log(warn('[WARN] dropped', obj));
+							}
 						}
 					},
 					function() {
 						list.queue(null);
+						this.queue(null);
 					}
 				));
 		}, function() {
@@ -76,8 +85,9 @@ function turnFileLinesIntoObjectStream() {
 function addSourceToEachObjectInStream(getSourceFromPath) {
 	return through(
 		function({path, list}) {
+				let source = getSourceFromPath(path);
 				let newList = list.pipe(eventStream.map(function(obj, cb) {
-					obj.source = getSourceFromPath(path);
+					obj.source = source;
 					cb(null, obj);
 				}));
 				this.queue(newList);
@@ -90,33 +100,22 @@ function addSourceToEachObjectInStream(getSourceFromPath) {
 
 function mergeObjectStreams() {
 	let pending = 0;
-	let mergeStream = through();
+	let mergeStream;
 	return through(
 		function(strm) {
+			if(mergeStream === undefined) { mergeStream = this; }
 			pending++;
 			strm.pipe(through(
-				function(d) {
-					mergeStream.queue(d);
-				},
-				function() {
+				function whenData(d) { mergeStream.queue(d); },
+				function whenEnd() {
 					pending--;
-					if(pending === 0) {
-						mergeStream.queue(null);
-					}
+					if(pending === 0) { mergeStream.queue(null); }
+					this.queue(null);
 				}
 			));
 		},
-		function() {
-			var strm = this;
-			mergeStream.pipe(through(
-				function(d) {
-					strm.queue(d);
-				},
-				function() {
-					strm.queue(null);
-				}
-			))
-		}
+		function() { /* do nothing */ },
+		{end: false}
 	);
 };
 
@@ -146,7 +145,7 @@ class UrlGrouper {
 	getUrlEntry(item) {
 		let {url} = item;
 		if(!url) {
-			console.log(`[WARN] Item has no url ${JSON.stringify(item)}`);
+			console.log(warn(`[WARN] Item has no url ${JSON.stringify(item)}`));
 			return;
 		}
 		let urlAndProtocol = UrlGrouper.getUrlProtocol(url);
@@ -181,13 +180,14 @@ class UrlGrouper {
 function exportItems() {
 	let grouped = new UrlGrouper();
 	var geoUrls = require('./geo-urls.js');
+	var count = 0;
 
 	return through(
 		function(item) { grouped.queue(item); },
 		function() {
 			var Datastore = require('nedb'),
 				db_default  = new Datastore({ filename: overwriteFile(__dirname + '/merged-default/merged.nedb.json'), autoload: true }),
-				db_geo      = new Datastore({ filename: overwriteFile(__dirname + '/merged-geo/merged.nedb.json'), autoload: true });;
+				db_geo      = new Datastore({ filename: overwriteFile(__dirname + '/merged-geo/merged.nedb.json'), autoload: true });
 
 			let urls    = grouped.listUrls();
 			urls.sort((a,b) => { return a.url < b.url ? -1 : a.url > b.url ? 1 : 0 });
@@ -197,8 +197,8 @@ function exportItems() {
 				db.insert({url: fullUrl, sha1: sha1(fullUrl), sources, props});
 			});
 
-			console.log(`[saved] ${db_default.filename}`)
-			console.log(`[saved] ${db_geo.filename}`)
+			console.log(info(`[INFO] saved '${db_default.filename}'`));
+			console.log(info(`[INFO] saved '${db_geo.filename}'`));
 		}
 	);
 }

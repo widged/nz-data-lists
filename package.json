@@ -25,6 +25,7 @@
     "shrinkwrap": "^0.4.0"
   },
   "dependencies": {
+    "chalk": "^1.1.1",
     "fast-csv": "^0.6.0",
     "nedb": "^1.2.1",
     "sha1": "^1.1.1"
